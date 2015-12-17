@@ -17,7 +17,7 @@
 #
 
 # The target to build, see VALID_TARGETS below
-TARGET		?= NAZE
+TARGET		?= CC3D_OPBL_BP6
 
 # Compile-time options
 OPTIONS		?=
@@ -38,7 +38,7 @@ FLASH_SIZE ?=
 # Things that need to be maintained as the source changes
 #
 
-FORKNAME			 = betaflight
+FORKNAME			 = betaflight_for_eachine_racer_250
 
 CC3D_TARGETS = CC3D CC3D_OPBL CC3D_BP6 CC3D_OPBL_BP6
 

@@ -72,7 +72,7 @@
 #include "config/config_master.h"
 
 #define BRUSHED_MOTORS_PWM_RATE 16000
-#define BRUSHLESS_MOTORS_PWM_RATE 400
+#define BRUSHLESS_MOTORS_PWM_RATE 500
 
 void useRcControlsConfig(modeActivationCondition_t *modeActivationConditions, escAndServoConfig_t *escAndServoConfigToUse, pidProfile_t *pidProfileToUse);
 
@@ -144,7 +144,7 @@ static void resetAccelerometerTrims(flightDynamicsTrims_t *accelerometerTrims)
 
 static void resetPidProfile(pidProfile_t *pidProfile)
 {
-    pidProfile->pidController = 1;
+    pidProfile->pidController = 2;
 
     pidProfile->P8[ROLL] = 40;
     pidProfile->I8[ROLL] = 30;
@@ -176,19 +176,19 @@ static void resetPidProfile(pidProfile_t *pidProfile)
     pidProfile->D8[PIDVEL] = 1;
 
     pidProfile->gyro_soft_lpf = 1;   // filtering ON by default
-    pidProfile->dterm_cut_hz = 40;
+    pidProfile->dterm_cut_hz = 20;
     pidProfile->yaw_pterm_cut_hz = 0;
 
-    pidProfile->P_f[ROLL] = 1.5f;     // new PID with preliminary defaults test carefully
-    pidProfile->I_f[ROLL] = 0.3f;
+    pidProfile->P_f[ROLL] = 1.4f;     // new PID with preliminary defaults test carefully
+    pidProfile->I_f[ROLL] = 0.25f;
     pidProfile->D_f[ROLL] = 0.02f;
-    pidProfile->P_f[PITCH] = 1.5f;
-    pidProfile->I_f[PITCH] = 0.3f;
+    pidProfile->P_f[PITCH] = 1.2f;
+    pidProfile->I_f[PITCH] = 0.25f;
     pidProfile->D_f[PITCH] = 0.02f;
     pidProfile->P_f[YAW] = 4.0f;
     pidProfile->I_f[YAW] = 0.4f;
     pidProfile->D_f[YAW] = 0.01f;
-    pidProfile->A_level = 6.0f;
+    pidProfile->A_level = 5.0f;
     pidProfile->H_level = 6.0f;
     pidProfile->H_sensitivity = 75;
 
@@ -196,12 +196,12 @@ static void resetPidProfile(pidProfile_t *pidProfile)
     pidProfile->gtune_lolimP[ROLL] = 10;          // [0..200] Lower limit of ROLL P during G tune.
     pidProfile->gtune_lolimP[PITCH] = 10;         // [0..200] Lower limit of PITCH P during G tune.
     pidProfile->gtune_lolimP[YAW] = 10;           // [0..200] Lower limit of YAW P during G tune.
-    pidProfile->gtune_hilimP[ROLL] = 100;         // [0..200] Higher limit of ROLL P during G tune. 0 Disables tuning for that axis.
-    pidProfile->gtune_hilimP[PITCH] = 100;        // [0..200] Higher limit of PITCH P during G tune. 0 Disables tuning for that axis.
-    pidProfile->gtune_hilimP[YAW] = 100;          // [0..200] Higher limit of YAW P during G tune. 0 Disables tuning for that axis.
+    pidProfile->gtune_hilimP[ROLL] = 25;         // [0..200] Higher limit of ROLL P during G tune. 0 Disables tuning for that axis.
+    pidProfile->gtune_hilimP[PITCH] = 25;        // [0..200] Higher limit of PITCH P during G tune. 0 Disables tuning for that axis.
+    pidProfile->gtune_hilimP[YAW] = 60;          // [0..200] Higher limit of YAW P during G tune. 0 Disables tuning for that axis.
     pidProfile->gtune_pwr = 0;                    // [0..10] Strength of adjustment
     pidProfile->gtune_settle_time = 450;          // [200..1000] Settle time in ms
-    pidProfile->gtune_average_cycles = 16;        // [8..128] Number of looptime cycles used for gyro average calculation
+    pidProfile->gtune_average_cycles = 64;        // [8..128] Number of looptime cycles used for gyro average calculation
 #endif
 }
 
@@ -235,8 +235,8 @@ void resetSensorAlignment(sensorAlignmentConfig_t *sensorAlignmentConfig)
 
 void resetEscAndServoConfig(escAndServoConfig_t *escAndServoConfig)
 {
-    escAndServoConfig->minthrottle = 1150;
-    escAndServoConfig->maxthrottle = 1850;
+    escAndServoConfig->minthrottle = 1070;
+    escAndServoConfig->maxthrottle = 1950;
     escAndServoConfig->mincommand = 1000;
     escAndServoConfig->servoCenterPulse = 1500;
 }
@@ -315,15 +315,18 @@ static void resetControlRateConfig(controlRateConfig_t *controlRateConfig) {
     controlRateConfig->rcYawExpo8 = 20;
     controlRateConfig->tpa_breakpoint = 1500;
 
-    for (uint8_t axis = 0; axis < FLIGHT_DYNAMICS_INDEX_COUNT; axis++) {
+ /*   for (uint8_t axis = 0; axis < FLIGHT_DYNAMICS_INDEX_COUNT; axis++) {
         controlRateConfig->rates[axis] = 0;
     }
-
+*/
+	controlRateConfig->rates[0] = 40;
+	controlRateConfig->rates[1] = 40;
+	controlRateConfig->rates[2] = 10;
 }
 
 void resetRcControlsConfig(rcControlsConfig_t *rcControlsConfig) {
-    rcControlsConfig->deadband = 0;
-    rcControlsConfig->yaw_deadband = 0;
+    rcControlsConfig->deadband = 10;
+    rcControlsConfig->yaw_deadband = 10;
     rcControlsConfig->alt_hold_deadband = 40;
     rcControlsConfig->alt_hold_fast_change = 1;
 }
@@ -393,7 +396,7 @@ static void resetConf(void)
 #endif
 
     featureSet(FEATURE_FAILSAFE);
-    featureSet(FEATURE_ONESHOT125);
+    featureSet(FEATURE_RX_PPM);
     featureSet(FEATURE_MOTOR_STOP);
     // global settings
     masterConfig.current_profile_index = 0;     // default profile
@@ -414,9 +417,9 @@ static void resetConf(void)
     masterConfig.gyroConfig.gyroMovementCalibrationThreshold = 32;
 
     // xxx_hardware: 0:default/autodetect, 1: disable
-    masterConfig.mag_hardware = 0;
+    masterConfig.mag_hardware = 1;
 
-    masterConfig.baro_hardware = 0;
+    masterConfig.baro_hardware = 1;
 
     resetBatteryConfig(&masterConfig.batteryConfig);
 
@@ -425,10 +428,10 @@ static void resetConf(void)
     masterConfig.rxConfig.serialrx_provider = 0;
     masterConfig.rxConfig.spektrum_sat_bind = 0;
     masterConfig.rxConfig.midrc = 1500;
-    masterConfig.rxConfig.mincheck = 1100;
-    masterConfig.rxConfig.maxcheck = 1900;
-    masterConfig.rxConfig.rx_min_usec = 885;          // any of first 4 channels below this value will trigger rx loss detection
-    masterConfig.rxConfig.rx_max_usec = 2115;         // any of first 4 channels above this value will trigger rx loss detection
+    masterConfig.rxConfig.mincheck = 1020;
+    masterConfig.rxConfig.maxcheck = 1980;
+    masterConfig.rxConfig.rx_min_usec = 985;          // any of first 4 channels below this value will trigger rx loss detection
+    masterConfig.rxConfig.rx_max_usec = 2015;         // any of first 4 channels above this value will trigger rx loss detection
 
     for (i = 0; i < MAX_SUPPORTED_RC_CHANNEL_COUNT; i++) {
         rxFailsafeChannelConfiguration_t *channelFailsafeConfiguration = &masterConfig.rxConfig.failsafe_channel_configurations[i];
@@ -464,7 +467,7 @@ static void resetConf(void)
     masterConfig.motor_pwm_rate = BRUSHLESS_MOTORS_PWM_RATE;
 #endif
     masterConfig.servo_pwm_rate = 50;
-    masterConfig.use_fast_pwm = 0;
+    masterConfig.use_fast_pwm = 1;
 
 #ifdef GPS
     // gps/nav stuff
@@ -541,7 +544,7 @@ static void resetConf(void)
 #endif
 
 #ifdef BLACKBOX
-#ifdef SPRACINGF3
+#ifdef CC3D
     featureSet(FEATURE_BLACKBOX);
     masterConfig.blackbox_device = 1;
 #else

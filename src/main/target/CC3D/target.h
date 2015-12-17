@@ -144,6 +144,8 @@
 #undef SONAR
 #undef BARO
 #define SKIP_CLI_COMMAND_HELP
+#undef GPS                   //added
+#define GTUNE                //added
 #endif
 
 #define SPEKTRUM_BIND

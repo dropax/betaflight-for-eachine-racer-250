@@ -111,10 +111,10 @@ enum {
     PWM4,
     PWM5,
     PWM6,
-    PWM7,
-    PWM8,
-    PWM9,
-    PWM10,
+    PWM10,  //remapping motor out for openpilot
+    PWM8,  //
+    PWM7, //
+    PWM9,  //
     PWM11,
     PWM12,
     PWM13,

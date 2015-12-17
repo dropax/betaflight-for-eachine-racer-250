@@ -83,10 +83,10 @@ static lowpass_t lowpassFilters[MAX_SUPPORTED_SERVOS];
 #endif
 
 static const motorMixer_t mixerQuadX[] = {
-    { 1.0f, -1.0f,  1.0f, -1.0f },          // REAR_R
-    { 1.0f, -1.0f, -1.0f,  1.0f },          // FRONT_R
-    { 1.0f,  1.0f,  1.0f,  1.0f },          // REAR_L
-    { 1.0f,  1.0f, -1.0f, -1.0f },          // FRONT_L
+    { 1.0f, -1.0f,  0.930f, -1.0f },          //0 REAR_R
+    { 1.0f, -1.0f, -0.930f,  1.0f },          //1 FRONT_R
+    { 1.0f,  1.0f,  0.930f,  1.0f },          //2 REAR_L
+    { 1.0f,  1.0f, -0.930f, -1.0f },          //3 FRONT_L
 };
 #ifndef USE_QUAD_MIXER_ONLY
 static const motorMixer_t mixerTricopter[] = {

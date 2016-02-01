@@ -73,7 +73,7 @@
 #include "config/config_master.h"
 
 #define BRUSHED_MOTORS_PWM_RATE 16000
-#define BRUSHLESS_MOTORS_PWM_RATE 400
+#define BRUSHLESS_MOTORS_PWM_RATE 500
 
 void useRcControlsConfig(modeActivationCondition_t *modeActivationConditions, escAndServoConfig_t *escAndServoConfigToUse, pidProfile_t *pidProfileToUse);
 
@@ -168,8 +168,8 @@ static void resetPidProfile(pidProfile_t *pidProfile)
     pidProfile->P8[PIDNAVR] = 25; // NAV_P * 10;
     pidProfile->I8[PIDNAVR] = 33; // NAV_I * 100;
     pidProfile->D8[PIDNAVR] = 83; // NAV_D * 1000;
-    pidProfile->P8[PIDLEVEL] = 55;
-    pidProfile->I8[PIDLEVEL] = 55;
+    pidProfile->P8[PIDLEVEL] = 45;
+    pidProfile->I8[PIDLEVEL] = 45;
     pidProfile->D8[PIDLEVEL] = 100;
     pidProfile->P8[PIDMAG] = 40;
     pidProfile->P8[PIDVEL] = 120;
@@ -190,8 +190,8 @@ static void resetPidProfile(pidProfile_t *pidProfile)
     pidProfile->P_f[YAW] = 4.0f;
     pidProfile->I_f[YAW] = 0.4f;
     pidProfile->D_f[YAW] = 0.00f;
-    pidProfile->A_level = 6.0f;
-    pidProfile->H_level = 6.0f;
+    pidProfile->A_level = 5.0f;
+    pidProfile->H_level = 5.0f;
     pidProfile->H_sensitivity = 75;
 
 #ifdef GTUNE
@@ -237,8 +237,8 @@ void resetSensorAlignment(sensorAlignmentConfig_t *sensorAlignmentConfig)
 
 void resetEscAndServoConfig(escAndServoConfig_t *escAndServoConfig)
 {
-    escAndServoConfig->minthrottle = 1150;
-    escAndServoConfig->maxthrottle = 1850;
+    escAndServoConfig->minthrottle = 1070;
+    escAndServoConfig->maxthrottle = 1950;
     escAndServoConfig->mincommand = 1000;
     escAndServoConfig->servoCenterPulse = 1500;
 }
@@ -324,8 +324,8 @@ static void resetControlRateConfig(controlRateConfig_t *controlRateConfig) {
 }
 
 void resetRcControlsConfig(rcControlsConfig_t *rcControlsConfig) {
-    rcControlsConfig->deadband = 0;
-    rcControlsConfig->yaw_deadband = 0;
+    rcControlsConfig->deadband = 2;
+    rcControlsConfig->yaw_deadband = 2;
     rcControlsConfig->alt_hold_deadband = 40;
     rcControlsConfig->alt_hold_fast_change = 1;
 }
@@ -395,7 +395,9 @@ static void resetConf(void)
 #endif
 
     featureSet(FEATURE_FAILSAFE);
-    featureSet(FEATURE_ONESHOT125);
+//    featureSet(FEATURE_ONESHOT125);
+    featureSet(FEATURE_MOTOR_STOP); 
+	featureSet(RX_PARALLEL_PWM);
 
     // global settings
     masterConfig.current_profile_index = 0;     // default profile
@@ -427,10 +429,10 @@ static void resetConf(void)
     masterConfig.rxConfig.serialrx_provider = 0;
     masterConfig.rxConfig.spektrum_sat_bind = 0;
     masterConfig.rxConfig.midrc = 1500;
-    masterConfig.rxConfig.mincheck = 1100;
-    masterConfig.rxConfig.maxcheck = 1900;
-    masterConfig.rxConfig.rx_min_usec = 885;          // any of first 4 channels below this value will trigger rx loss detection
-    masterConfig.rxConfig.rx_max_usec = 2115;         // any of first 4 channels above this value will trigger rx loss detection
+    masterConfig.rxConfig.mincheck = 1025;
+    masterConfig.rxConfig.maxcheck = 1975;
+    masterConfig.rxConfig.rx_min_usec = 980;          // any of first 4 channels below this value will trigger rx loss detection
+    masterConfig.rxConfig.rx_max_usec = 2020;         // any of first 4 channels above this value will trigger rx loss detection
 
     for (i = 0; i < MAX_SUPPORTED_RC_CHANNEL_COUNT; i++) {
         rxFailsafeChannelConfiguration_t *channelFailsafeConfiguration = &masterConfig.rxConfig.failsafe_channel_configurations[i];
@@ -467,7 +469,7 @@ static void resetConf(void)
     masterConfig.motor_pwm_rate = BRUSHLESS_MOTORS_PWM_RATE;
 #endif
     masterConfig.servo_pwm_rate = 50;
-    masterConfig.use_fast_pwm = 0;
+    masterConfig.use_fast_pwm = 1;
 #ifdef CC3D
     masterConfig.use_buzzer_p6 = 0;
 #endif
@@ -547,7 +549,7 @@ static void resetConf(void)
 #endif
 
 #ifdef BLACKBOX
-#ifdef SPRACINGF3
+#ifdef CC3D
     featureSet(FEATURE_BLACKBOX);
     masterConfig.blackbox_device = 1;
 #else

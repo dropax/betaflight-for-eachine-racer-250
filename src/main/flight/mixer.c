@@ -859,7 +859,7 @@ void mixTable(void)
             }
 
             // Motor stop handling
-            if (feature(FEATURE_MOTOR_STOP) && ARMING_FLAG(ARMED) && !feature(FEATURE_3D)) {
+            if ((feature(FEATURE_MOTOR_STOP) && !IS_RC_MODE_ACTIVE(BOXIDLEON)) && ARMING_FLAG(ARMED) && !feature(FEATURE_3D)) {
                 if (((rcData[THROTTLE]) < rxConfig->mincheck)) {
                     motor[i] = escAndServoConfig->mincommand;
                 }
@@ -916,7 +916,7 @@ void mixTable(void)
                         // do not spin the motors.
                         motor[i] = constrain(motor[i], escAndServoConfig->minthrottle, escAndServoConfig->maxthrottle);
                         if (((rcData[THROTTLE]) < rxConfig->mincheck)) {
-                            if (feature(FEATURE_MOTOR_STOP)) {
+                            if ((feature(FEATURE_MOTOR_STOP) && !IS_RC_MODE_ACTIVE(BOXIDLEON))) {
                                 motor[i] = escAndServoConfig->mincommand;
                             }
                         }

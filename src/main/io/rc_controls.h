@@ -50,6 +50,7 @@ typedef enum {
     BOXFAILSAFE,
     BOXAIRMODE,
 	BOXACROPLUS,
+	BOXIDLEON,
     CHECKBOX_ITEM_COUNT
 } boxId_e;
 

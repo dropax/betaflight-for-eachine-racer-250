@@ -143,6 +143,7 @@ static const box_t boxes[CHECKBOX_ITEM_COUNT + 1] = {
     { BOXFAILSAFE, "FAILSAFE;", 27 },
     { BOXAIRMODE, "AIR MODE;", 28 },
     { BOXACROPLUS, "ACRO PLUS;", 29 },
+	{ BOXIDLEON, "IDLE ON;", 30 },
     { CHECKBOX_ITEM_COUNT, NULL, 0xFF }
 };
 
@@ -471,6 +472,10 @@ void mspInit(serialConfig_t *serialConfig)
     activeBoxIds[activeBoxIdCount++] = BOXAIRMODE;
     activeBoxIds[activeBoxIdCount++] = BOXACROPLUS;
 
+	if (feature(FEATURE_MOTOR_STOP)) {
+          activeBoxIds[activeBoxIdCount++] = BOXIDLEON;
+    }
+
 
     if (sensors(SENSOR_BARO)) {
         activeBoxIds[activeBoxIdCount++] = BOXBARO;
@@ -576,8 +581,8 @@ static uint32_t packFlightModeFlags(void)
         IS_ENABLED(IS_RC_MODE_ACTIVE(BOXBLACKBOX)) << BOXBLACKBOX |
         IS_ENABLED(FLIGHT_MODE(FAILSAFE_MODE)) << BOXFAILSAFE |
         IS_ENABLED(IS_RC_MODE_ACTIVE(BOXAIRMODE)) << BOXAIRMODE |
-        IS_ENABLED(IS_RC_MODE_ACTIVE(BOXACROPLUS)) << BOXACROPLUS;
-
+        IS_ENABLED(IS_RC_MODE_ACTIVE(BOXAIRMODE)) << BOXAIRMODE |
+        IS_ENABLED(IS_RC_MODE_ACTIVE(BOXIDLEON)) << BOXIDLEON;
     for (i = 0; i < activeBoxIdCount; i++) {
         int flag = (tmp & (1 << activeBoxIds[i]));
         if (flag)

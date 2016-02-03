@@ -400,7 +400,7 @@ static void resetConf(void)
     featureSet(FEATURE_FAILSAFE);
  //   featureSet(FEATURE_ONESHOT125);
     featureSet(FEATURE_MOTOR_STOP); 
- 	featureSet(RX_PARALLEL_PWM);
+ 	featureSet(FEATURE_RX_PARALLEL_PWM);
  
     // global settings
     masterConfig.current_profile_index = 0;     // default profile

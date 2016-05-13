@@ -2790,7 +2790,7 @@ static void cliVersion(char *cmdline)
 {
     UNUSED(cmdline);
 
-    cliPrintf("# BetaFlight/%s %s %s / %s (%s)",
+    cliPrintf("# BetaFlight for Eachine Racer/Falcon 250/%s %s %s / %s (%s)",
         targetName,
         FC_VERSION_STRING,
         buildDate,
